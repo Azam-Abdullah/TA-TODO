@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
     request: NextRequest,
-    {params}:{params: {id: string}}
+    { params }: { params: { [key: string]: string | string[] } } 
 ) {
     try {
 
@@ -14,7 +14,7 @@ export async function GET(
             return NextResponse.json({error:"Unauthorized"},{status:401});
         }
         
-        const taskId = await params.id;
+        const taskId = await params.id as string;
         const task = await prisma.task.findUnique({
             where:{
                 id:taskId,
@@ -44,7 +44,7 @@ export async function GET(
 
 export async function PUT(
     request: NextRequest,
-    {params}:{params: {id: string}}
+    { params }: { params: { [key: string]: string | string[] } } 
 ) {
     try {
 
@@ -54,7 +54,7 @@ export async function PUT(
             return NextResponse.json({error:"Unauthorized"},{status:401});
         }
         
-        const taskId = await params.id;
+        const taskId = await params.id as string;
 
         const {title,completed} = await request.json();
         
@@ -97,7 +97,7 @@ export async function PUT(
 
 export async function DELETE(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: { [key: string]: string | string[] } } 
 ) {
     try {
         const session = await auth();
@@ -105,7 +105,7 @@ export async function DELETE(
             return NextResponse.json({error:"Unauthorized"},{status:401});
         }
         
-        const taskId = await params.id;
+        const taskId = await params.id as string;
         
         // Check if task exists and belongs to user
         const existingTask = await prisma.task.findUnique({

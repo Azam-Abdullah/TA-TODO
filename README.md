@@ -26,7 +26,7 @@ A full-stack Todo web application built with Next.js, Supabase, and Prisma. This
 1. Clone the repository:
    ```sh
    git clone https://github.com/Azam-Abdullah/TA-TODO.git
-   cd todo-app
+   cd TA-TODO
    ```
 2. Install dependencies:
    ```sh
@@ -37,9 +37,11 @@ A full-stack Todo web application built with Next.js, Supabase, and Prisma. This
 3. Set up environment variables:
    Create a `.env.local` file in the root directory and add the following:
    ```env
-   NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-   DATABASE_URL=your-prisma-database-url
+   DATABASE_URL=your-prisma-supabase-url
+   DIRECT_URL=your-prisma-supabase-direct-url
+   AUTH_GOOGLE_ID=your-google-project-id
+   AUTH_GOOGLE_SECRET=your-google-project-secret
+   AUTH_SECRET= generate using 'openssl rand -base64 32'
    ```
 4. Run database migration:
    ```sh
