@@ -33,21 +33,14 @@ export const authOptions: NextAuthConfig = {
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
-                token.role = user.role;
+                token.id = user.id;
             }
             return token;
         },
 
         async session({ token, session }) {
-            console.log({
-                sessionToken: token
-            });
             if (token.sub && session.user) {
                 session.user.id = token.sub;
-            }
-
-            if (token.role && session.user) {
-                session.user.role = token.role;
             }
 
             return session;

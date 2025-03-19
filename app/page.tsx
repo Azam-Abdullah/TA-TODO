@@ -14,7 +14,7 @@ export default function Home() {
 
   useEffect(() => {
     if (status === "authenticated") {
-      router.push("/tasks");
+      router.push('/task')
     }
   }, [status, router]);
 

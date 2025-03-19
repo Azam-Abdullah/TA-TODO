@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import Link from 'next/link';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import GoogleSignInButton from './google-signin-button';
 import { useRouter } from 'next/navigation';
 import { TbLoader2 } from 'react-icons/tb';
@@ -17,6 +17,8 @@ export function LoginForm() {
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
+    const { data: session, update } = useSession(); // Get session state
+
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -25,16 +27,13 @@ export function LoginForm() {
         setIsLoading(true);
 
         try {
-            const result = await login({email,password})
-
-            if (result?.error) {
-                setError('Invalid email or password');
-                return;
-            }
+            const result = await login({ email, password })
 
             if (result?.success) {
-                setSuccess('Logged in successfully!');
-                router.push('/tasks');
+                await update();
+                router.push("/tasks");
+            } else if (result?.error) {
+                setError(result.error);
             }
         } catch (error) {
             console.log(error);
@@ -47,20 +46,20 @@ export function LoginForm() {
     return (
         <div className="w-full max-w-lg rounded-xl shadow-md bg-white p-8">
             <h2 className="text-2xl font-bold text-center mb-6">Login to your account</h2>
-            
+
             {error && (
                 <div className="bg-red-50 text-red-600 p-3 rounded-md mb-4 flex items-center">
                     <FiAlertCircle className="mr-2 flex-shrink-0" />
                     {error}
                 </div>
             )}
-            
+
             {success && (
                 <div className="bg-green-50 text-green-600 p-3 rounded-md mb-4">
                     {success}
                 </div>
             )}
-            
+
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
@@ -81,7 +80,7 @@ export function LoginForm() {
                         />
                     </div>
                 </div>
-                
+
                 <div>
                     <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
                         Password
@@ -101,7 +100,7 @@ export function LoginForm() {
                         />
                     </div>
                 </div>
-                
+
                 <button
                     type="submit"
                     disabled={isLoading}
@@ -117,14 +116,14 @@ export function LoginForm() {
                     )}
                 </button>
             </form>
-            
+
             <div className="relative flex items-center justify-center mt-6 mb-6">
                 <div className="border-t border-gray-300 absolute w-full"></div>
                 <div className="bg-white px-3 relative text-sm text-gray-500">Or continue with</div>
             </div>
-            
+
             <GoogleSignInButton className="w-full" />
-            
+
             <p className="text-center text-gray-600 mt-6">
                 Don't have an account?{" "}
                 <Link href="/auth/register" className="text-blue-600 hover:underline">
