@@ -10,9 +10,6 @@ import bcrypt from "bcryptjs"
 
 export const authOptions: NextAuthConfig = {
     adapter: PrismaAdapter(prisma),
-    pages:{
-        signIn:"/auth/login",
-      },
     providers: [Google,
         Credentials({
             async authorize(credentials) {
